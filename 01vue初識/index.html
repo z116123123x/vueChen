@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			
+			<h1>{{username}}</h1>
+			<h1 v-if="isVip">用戶類型：VIP</h1>
+			<!-- v-if跟v-else中間不能有其他元素 -->
+			<h1 v-else>用戶類型：普通用戶</h1>
+			
+			<h3 v-if="age>18">18歲以上允許登入24小時</h3>
+			<h3 v-else-if="age>10">10歲17歲允許登入20小時</h3>
+			<h3 v-else="age>5">5歲~9歲允許登入4小時</h3>
+			
+		</div>
+		<script type="text/javascript">
+			let app=new Vue({
+				el:'#app',
+				data:{
+					username:'小明',
+					isVip:true,
+					age:20
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+
+			<h3 v-if="tab===1">首頁</h3>
+			<h3 v-else-if="tab===2">新聞頁</h3>
+			<h3 v-else>個人中心</h3>
+
+			<button @click="tabChange" data-id="1" type="button">首頁</button>
+			<button @click="tabChange" data-id="2" type="button">新聞頁</button>
+			<button @click="tabChange" data-id="3" type="button">個人中心</button>
+
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					tab: 1,
+				},
+				methods: {
+					tabChange(e) {
+						console.log(e)
+						let tabId = +(e.target.dataset.id)
+						console.log(this)
+						console.log(app)
+						console.log(app === this) // this就是app
+						this.tab = tabId
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

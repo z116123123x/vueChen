@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<h1>不綁定 key </h1>
+			<h3>
+				通常会复用已有元素而不是从头开始渲染，
+				切換 username div 跟 email div 時，
+				vue將他們視為相同的元素不重新渲染，
+				所以 input 裡面已經輸入的資料"不會"因為切換 div而消失
+			</h3>
+			<div v-if="loginType === 'username'">
+				<label>Username</label>
+				<input placeholder="Enter your username">
+			</div>
+			<div v-else>
+				<label>Email</label>
+				<input placeholder="Enter your email address">
+			</div>
+			<button @click="toggle" type="button">切換 Username / Email</button>
+		</div>
+
+		<div id="app2">
+			<h1>綁定 key </h1>
+			<h3>
+				綁定 key 時就會將 key 的值作為判別是否為相同元素，如果 key 值不同將視為不同元素，重新渲染，所以 input 裡面已經輸入的資料"會"因為切換 div而消失
+			</h3>
+			<div v-if="loginType === 'username'" key="username">
+				<label>Username</label>
+				<input placeholder="Enter your username">
+			</div>
+			<div v-else key="email">
+				<label>Email</label>
+				<input placeholder="Enter your email address">
+			</div>
+			<button @click="toggle" type="button">切換 Username / Email</button>
+		</div>
+		
+		<p>參考資料：
+			<a href="https://cn.vuejs.org/v2/guide/conditional.html#%E7%94%A8-key-%E7%AE%A1%E7%90%86%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E5%85%83%E7%B4%A0">https://cn.vuejs.org/v2/guide/conditional.html#%E7%94%A8-key-%E7%AE%A1%E7%90%86%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E5%85%83%E7%B4%A0</a>
+		</p>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					loginType: 'username'
+				},
+				methods: {
+					toggle() {
+						if (this.loginType === 'username') {
+							this.loginType = 'email'
+						} else {
+							this.loginType = 'username'
+						}
+					}
+				}
+			})
+			let app2 = new Vue({
+				el: '#app2',
+				data: {
+					loginType: 'username'
+				},
+				methods: {
+					toggle() {
+						if (this.loginType === 'username') {
+							this.loginType = 'email'
+						} else {
+							this.loginType = 'username'
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

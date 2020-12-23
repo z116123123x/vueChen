@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			
+			<h3>明星列表</h3>
+			<ul>
+				<li v-for="item in stars">{{item}}</li>
+			</ul>
+			
+			<h3>學生列表 (帶索引直)</h3>
+			<ul>
+				<li v-for="item,key in students">
+					<h4>{{key}} - {{item.name}}</h4>
+					<p>年齡: {{item.age}} - 學校: {{item.school}}</p>
+				</li>
+			</ul>
+			
+			<h3>循環對象</h3>
+			<ul>
+				<li v-for="item,key in students[0]">
+					{{key}} : {{item}}
+				</li>
+			</ul>
+			
+			<h3> 條件 + 循環渲染 (將偶數年齡的學生渲染出來、綁定 key ) </h3>
+			<p>vue 的運作是先循環渲染再條件渲染</p>
+			<p>vue 規定 v-for 應該都加上 key 作為唯一鍵</p>
+			<p>冒號 : 是 v-bind 的縮寫，將資料與實例化的 vue 裡的 data 綁定</p>
+			<ul>
+				<li v-for="item,index in students" v-if="item.age%2==0" :key="index">
+					<h4>{{index}} - {{item.name}}</h4>
+					<p>年齡: {{item.age}} - 學校: {{item.school}}</p>
+				</li>
+			</ul>
+
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					stars: ['周星馳','周潤發','珍妮佛勞倫茲'],
+					students: [
+						{
+							name:'小白',
+							age:16,
+							school:'清華大學'
+						},
+						{
+							name:'小洪',
+							age:17,
+							school:'中興大學'
+						},
+						{
+							name:'小黃',
+							age:19,
+							school:'中正大學'
+						},
+						{
+							name:'小黑',
+							age:18,
+							school:'台北大學'
+						},
+					],
+				},
+				methods: {
+					
+				}
+			})
+		</script>
+	</body>
+</html>
