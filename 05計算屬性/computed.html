@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			#red {
+				background-color: red;
+			}
+
+			#skyblue {
+				background-color: skyblue;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<h1>一般情況下寫法</h1>
+			<h2>{{firstname + lastname}}</h2>
+			<h1>計算屬性</h1>
+			<h2>{{fullname}}</h2>
+
+			<h1>逆序顯示一個單詞</h1>
+			<h2>一般情況下寫法</h2>
+			<h3>{{word.split('').reverse().join('')}}</h3>
+			<h2>計算屬性</h2>
+			<h3>{{reverseWord}}</h3>
+
+			<h1>顯示偶數年齡的學生</h1>
+			<h2>利用計算屬性跟陣列方法 filter 先過濾出年齡是偶數的學生，再用 v-for 循環渲染</h2>
+			<ul>
+				<li v-for="item in evenAgeStudents">
+					<h3>{{item.name}}</h3>
+					<h4>年齡：{{item.age}}，學校：{{item.school}}</h4>
+				</li>
+			</ul>
+
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					firstname: '韋',
+					lastname: '小寶',
+					word: 'music',
+					students: [{
+							name: '小白',
+							age: 16,
+							school: '清華大學'
+						},
+						{
+							name: '小洪',
+							age: 17,
+							school: '中興大學'
+						},
+						{
+							name: '小黃',
+							age: 19,
+							school: '中正大學'
+						},
+						{
+							name: '小黑',
+							age: 18,
+							school: '台北大學'
+						},
+					],
+				},
+				methods: {
+
+				},
+				computed: {
+					fullname() {
+						return this.firstname + this.lastname
+					},
+					reverseWord() {
+						return this.word.split('').reverse().join('')
+					},
+					evenAgeStudents() {
+						let res = this.students.filter((item, i) => {
+							return item.age % 2 === 0
+						})
+						return res
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

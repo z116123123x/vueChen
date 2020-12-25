@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			#red {
+				background-color: red;
+			}
+
+			#skyblue {
+				background-color: skyblue;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<h1>v-once</h1>
+			<h2>沒有 v-once 的元素裡的資料可以被重複修改</h2>
+			<h3>{{msg}}</h3>
+			<h2>有 v-once 的元素裡的資料只能從 vue 插入一次，不能被重複修改</h2>
+			<h3 v-once>{{msg}}</h3>
+			<button @click="changeMsg" type="button">change msg</button>
+
+			<h1>v-html</h1>
+			<h2>將從 vue 帶來的字串轉換成 html</h2>
+			<h3>{{htmlText}}</h3>
+			<h3 v-html="htmlText"></h3>
+
+			<h1>v-bind</h1>
+			<h2>v-bind 綁定 vue 實例的data</h2>
+			<h2>v-bind 可以簡寫為冒號 :</h2>
+			<h3 v-bind:id="id">id 屬性綁定 vue 實例的 data，目前的 id：{{id}}</h3>
+			<h3 :id="id">id 屬性綁定 vue 實例的 data，目前的 id：{{id}}</h3>
+			<button @click="changeId" type="button">change id</button>
+
+			<h1>“Mustache”语法 (双大括号) 裡面可以放表達式 (算式、三元判斷...等) </h1>
+			<h2>字串相加</h2>
+			<h3>{{firstName + lastName}}</h3>
+			<h2>三元判斷</h2>
+			<h3>{{isvip?'你是VIP':'你不是VIP，請儲值'}}</h3>
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					msg: 'origin msg',
+					htmlText: '<span>app.htmlText</span>',
+					id: 'red',
+					firstName: '韋',
+					lastName: '小寶',
+					isvip:true,
+				},
+				methods: {
+					changeMsg() {
+						this.msg = 'msg has changed'
+					},
+					changeId() {
+						if (this.id === 'red') {
+							this.id = 'skyblue'
+						} else {
+							this.id = 'red'
+						}
+						// this.id=='red'?this.id='skyblue':this.id='red'
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
