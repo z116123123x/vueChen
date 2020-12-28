@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			#red {
+				background-color: red;
+			}
+
+			#skyblue {
+				background-color: skyblue;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<h1>在 chrome 的 console 中執行 app.msg='aa' 可以看到監聽器監聽到 vue 裡的 msg 發生變化</h1>
+			<h2>{{msg}}</h2>
+
+			<h1>在 chrome 的 console 中執行 app.arr.push('小蘭') 可以看到監聽器監聽到 vue 裡的 arr 發生變化</h1>
+			<ul>
+				<li v-for="item in arr">{{item}}</li>
+			</ul>
+
+			<h1>计算属性的 getter 與 setter</h1>
+			<h2>console 執行計算屬性 app.reverseStr = 'John Doe' 时，setter 会被调用，app.str 也会相应地被更新</h2>
+			<h2>可以用 console.log(str) 查看 str 目前的狀態</h2>
+			<h3>{{str}}</h3>
+			<h3>{{reverseStr}}</h3>
+
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					msg: 'i am a msg',
+					str: 'i am a str',
+					arr: ['小紅', '小黃', '小綠']
+				},
+				methods: {
+
+				},
+				computed: {
+					reverseStr: {
+						// getter 將結果回傳到 reverseStr
+						get: function() {
+							return 'i am reverseStr: ' + this.str
+						},
+						// setter 賦值給其他 data 像是 this.str
+						set: function(newValue) {// newValue 是 getter 的返回值
+							console.log('reverseStr: ',newValue)
+							this.str = newValue.split('').reverse().join('')
+						}
+					}
+				},
+				watch: {
+					// 這裡的 fn 命名要跟想要監聽的 data 一致，代表監聽哪一個 data
+					msg(val) {
+						console.log('監聽this.msg: ',val)
+					},
+					arr(val) {
+						console.log('監聽this.arr: ',val)
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

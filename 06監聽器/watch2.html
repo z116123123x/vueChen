@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			#red {
+				background-color: red;
+			}
+
+			#skyblue {
+				background-color: skyblue;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="demo">{{ fullName }}</div>
+
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#demo',
+				data: {
+					firstName: 'Foo',
+					lastName: 'Bar',
+					midName: 'Ali',
+				},
+				computed: {
+					fullName: {
+						// getter 回傳 this.firstName + ' ' + this.midName + ' ' + this.lastName 作為 fullName 的值
+						get: function() {
+							return this.firstName + ' ' + this.midName + ' ' + this.lastName
+						},
+						// setter 將this.firstName,this.midName,this.lastName 的值重新設置
+						set: function(newValue) { // newValue 是 getter 的返回值
+							console.log('newValue: ',newValue)
+							var names = newValue.split(' ')
+							this.firstName = names[0]
+							this.midName = names[names.length - 2]
+							this.lastName = names[names.length - 1]
+						},
+						//console 執行 vm.fullName = 'John Lee Doe' 时，setter 会被调用，vm.firstName 和 vm.midName 和 vm.lastName 也会相应地被更新
+					}
+				
+				}
+			})
+		</script>
+	</body>
+</html>
