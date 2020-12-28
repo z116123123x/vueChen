@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<h1>事件裡面使用表達式將 count + 1</h1>
+			<h2>count: {{count}}</h2>
+			<button @click="count++" type="button">count++</button>
+			
+			<h1>通過 vue實例將 count2 + 1</h1>
+			<h2>count2: {{count2}}</h2>
+			<button @click="count2plus1" type="button">count2++</button>
+
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					count:0,
+					count2:0
+				},
+				methods: {
+					count2plus1(){
+						this.count2++
+					}
+				},
+				computed: {
+
+				},
+				watch: {
+
+				}
+			})
+		</script>
+	</body>
+</html>

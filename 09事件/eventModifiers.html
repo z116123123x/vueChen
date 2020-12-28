@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<h1>修飾符</h1>
+
+			<h2>stop 修飾符，阻止冒泡事件</h2>
+			<h3>沒有stop 修飾符，阻止冒泡事件</h3>
+			<div @click="clickParent">
+				clickParent
+				<button type="button" @click="clickChild">clickChild</button>
+			</div>
+			<h3>有stop 修飾符，阻止冒泡事件</h3>
+			<div @click="clickParent">
+				clickParent
+				<button type="button" @click.stop="clickChild">clickChild</button>
+			</div>
+
+			<h2>prevent 修飾符，阻止預設事件</h2>
+			<h3>沒有prevent 修飾符，阻止預設事件</h3>
+			<form action="" method="post">
+				<input type="text" name="" id="" value="" />
+				<input type="submit" name="" id="" value="查詢" />
+			</form>
+
+			<h2>有prevent 修飾符，阻止預設事件</h2>
+			<h2>綁定輸入迴車事件 @keydown.enter=""</h2>
+			<h2>綁定輸入 f2 事件 @keydown.f2="" 可以在 vue 實例化前先配置，將 keycode 113 配置給修飾符 f2</h2>
+			<h2>Vue.config.keyCodes.f2 = 113</h2>
+			<h3>v-model 可以將輸入值綁定到 vue 實例</h3>
+			<h4>天氣查詢，只能輸入地區 (ex: 巴黎、德州、東京)</h4>
+			<form action="" method="post">
+				<input type="text" name="" id="weather" value="" v-model="city" @keydown.enter.f2="search"/>
+				<input @click.prevent="search" type="submit" name="" id="" value="查詢" />
+			</form>
+			<div>
+				{{weatherCity}}今天的天氣{{weather}}，氣溫是: {{temp}}度
+			</div>
+			
+			<h2>once 修飾符，事件只會觸發一次</h2>
+			<button @click.once="triggerOnce" type="button">once 修飾符</button>
+			
+			<h2>.ctrl 修飾符，案ctrl觸發事件，.exact 精確修飾符，只有按下ctrl才能觸發，如果加上其他鍵，ex: ctrl + alt，就不會觸發</h2>
+			<button @click.ctrl.exact="exactCtrlTrigger" type="button">ctrl + exact 修飾符，要按 ctrl + click </button>
+			
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			
+			<h2>使用和風天氣api查詢天氣</h2>
+			<a href="https://dev.qweather.com/docs/api/">和風天氣API</a>
+			<ol>
+				<li>
+					先申請和風天氣的會員，獲得 API 需要的 KEY
+				</li>
+				<li>
+					需要查询地区的LocationID或以逗号分隔的经度/纬度坐标（十进制），LocationID可通过城市搜索服务获取。例如： location=101010100 或 location=116.41,39.92
+				</li>
+				<li>
+					城市信息搜索
+					<a href="https://dev.qweather.com/docs/api/geo">城市信息搜索</a>
+					<p>API GET 參數可以加上 &lang=zh-hant 會返回繁體中文的結果</p>
+					<p>API: https://geoapi.qweather.com/v2/city/lookup?location=地區&key=8871c77a5b484d77a19ad873f8ccc678</p>
+					<p>範例: https://geoapi.qweather.com/v2/city/lookup?location=beijing&key=8871c77a5b484d77a19ad873f8ccc678</p>
+					<div>
+						<p>會查到如下文檔:</p>
+						<div>
+							{"code":"200","location":[{"name":"北京","id":"101010100","lat":"39.90498","lon":"116.40528","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"10","fxLink":"http://hfx.link/2ax1"},{"name":"海淀","id":"101010200","lat":"39.95607","lon":"116.31031","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"15","fxLink":"http://hfx.link/2ay1"},{"name":"朝阳","id":"101010300","lat":"39.92148","lon":"116.48641","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"15","fxLink":"http://hfx.link/2az1"},{"name":"昌平","id":"101010700","lat":"40.21808","lon":"116.23590","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"23","fxLink":"http://hfx.link/2b31"},{"name":"房山","id":"101011200","lat":"39.73553","lon":"116.13916","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"23","fxLink":"http://hfx.link/2b81"},{"name":"通州","id":"101010600","lat":"39.90248","lon":"116.65859","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"23","fxLink":"http://hfx.link/2b21"},{"name":"丰台","id":"101010900","lat":"39.86364","lon":"116.28696","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"25","fxLink":"http://hfx.link/2b51"},{"name":"大兴","id":"101011100","lat":"39.72890","lon":"116.33803","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"25","fxLink":"http://hfx.link/2b71"},{"name":"延庆","id":"101010800","lat":"40.46532","lon":"115.98500","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"33","fxLink":"http://hfx.link/2b41"},{"name":"平谷","id":"101011500","lat":"40.14478","lon":"117.11233","adm2":"北京","adm1":"北京市","country":"中国","tz":"Asia/Shanghai","utcOffset":"+08:00","isDst":"0","type":"city","rank":"33","fxLink":"http://hfx.link/2bb1"}],"refer":{"sources":["heweather.com"],"license":["commercial
+							license"]}}
+						</div>
+					</div>
+				</li>
+				<li>
+					<p>天气预报和实况 <a href="https://dev.qweather.com/docs/api/weather/">天气预报和实况</a> </p>
+					<p>
+						API: https://devapi.qweather.com/v7/weather/now?location=LocationID&key=8871c77a5b484d77a19ad873f8ccc678
+					</p>
+					<p>
+						範例: https://devapi.qweather.com/v7/weather/now?location=101010100&key=8871c77a5b484d77a19ad873f8ccc678
+					</p>
+					<p>就可以獲得北京的天氣了</p>
+				</li>
+			</ol>
+
+
+		</div>
+
+		<script type="text/javascript">
+			// 在實例化 vue 前配置 f2 的 keycode 為 113 ( 113 為 f2 的 keycode )
+			Vue.config.keyCodes.f2 = 113
+			let app = new Vue({
+				el: '#app',
+				data: {
+					city: '',
+					weatherCity: '',
+					weather: '',
+					temp: ''
+				},
+				methods: {
+					clickParent() {
+						alert('Parent has been clicked!')
+					},
+					clickChild() {
+						alert('Child has been clicked!')
+					},
+					triggerOnce(){
+						alert('我只會被觸發一次喔')
+					},
+					exactCtrlTrigger(){
+						alert('我只會被ctrl觸發')
+					},
+					search: async function() {
+						// document.querySelector('#weather').value = this.city + '是晴天'
+						let locationUrl =
+							`https://geoapi.qweather.com/v2/city/lookup?location=${this.city}&key=8871c77a5b484d77a19ad873f8ccc678`
+						let locationRes = await fetch(locationUrl)
+						let locationData = await locationRes.json()
+						console.log('locationData: ', locationData)
+
+						if (locationData.code !== '404') {
+							let locationId = locationData.location[0].id
+							let weatherUrl =
+								`https://devapi.qweather.com/v7/weather/now?location=${locationId}&key=8871c77a5b484d77a19ad873f8ccc678&lang=zh-hant`
+							let weatherRes = await fetch(weatherUrl)
+							let weatherData = await weatherRes.json()
+							console.log(weatherData)
+							this.weatherCity = locationData.location[0].name
+							this.weather = weatherData.now.text
+							this.temp = weatherData.now.temp
+						} else {
+							this.weatherCity = '查無此城市'
+						}
+
+
+					}
+				},
+				computed: {
+
+				},
+				watch: {
+
+				}
+			})
+		</script>
+	</body>
+</html>

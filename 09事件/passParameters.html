@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<h1>傳遞事件物件到 vue 實例的 methods 裡</h1>
+			<h2>默認會傳入事件物件</h2>
+			<ul>
+				<li v-for="item,index in arr" @click="passPara">{{index}} : {{item}}</li>
+			</ul>
+			
+			<h1>傳遞事件物件及其他資料到 vue 實例的 methods 裡</h1>
+			<h2>如果要傳入多個參數，事件物件要改寫成 $event</h2>
+			<ul>
+				<li v-for="item,index in arr" @click="passMultPara($event,item,index)">{{index}} : {{item}}</li>
+			</ul>
+
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					arr: ['柯有倫', '汪大東', '丁小雨']
+				},
+				methods: {
+					passPara(e) {
+						console.log(e)
+					},
+					passMultPara(e,item,index){
+						console.log(e,item,index)
+					}
+				},
+				computed: {
+
+				},
+				watch: {
+
+				}
+			})
+		</script>
+	</body>
+</html>

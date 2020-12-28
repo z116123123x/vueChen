@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+
+			.page {
+				width: 100vw;
+				height: 100vh;
+				background-color: #eee;
+				position: fixed;
+				left: 0;
+				top: 0;
+			}
+
+			.menu {
+				width: 50vw;
+				height: 100vh;
+				position: fixed;
+				top: 0;
+				left: 0;
+				transform: translate(100vw);
+				background-color: #87CEEB;
+				transition: 1s;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<div class="page">
+				首頁
+				<button @click="menuToggle" type="button">顯示側邊攔</button>
+			</div>
+			<div class="menu" :style="{transform: 'translate('+ translateWidth +'vw)'}">
+				側邊攔
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					isAtive: false,
+					translateWidth: 100
+				},
+				methods: {
+					menuToggle() {
+						if (this.translateWidth===50) {
+							this.translateWidth=100
+						} else{
+							this.translateWidth=50
+						}
+					}
+				},
+				computed: {
+
+				},
+				watch: {
+
+				}
+			})
+		</script>
+	</body>
+</html>
