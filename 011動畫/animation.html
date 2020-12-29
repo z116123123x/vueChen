@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+
+			<h1>transition</h1>
+			<h2>transition tag 的 name 屬性要跟 css class 一樣</h2>
+			<h3>動畫原理</h3>
+			<div>
+				<h3>Vue 提供了 transition 的封装组件，在下列情形中，可以给任何元素和组件添加进入/离开过渡</h3>
+				<ul>
+					<li>条件渲染 (使用 v-if)</li>
+					<li>条件展示 (使用 v-show)</li>
+					<li>动态组件</li>
+					<li>组件根节点</li>
+				</ul>
+			</div>
+			<div>
+				<p>動畫效果是通過 CSS 以及切換 class 做出來的</p>
+				<ol>
+					<li>在進入/離開的過渡中，會有 6 個 class 切換。</li>
+					<li>v-enter：定義進入過渡的開始狀態。在元素被插入之前生效，在元素被插入之後的下一幀移除。</li>
+					<li>
+						v-enter-active：定義進入過渡生效時的狀態。在整個進入過渡的階段中應用，在元素被插入之前生效，在過渡/動畫完成之後移除。這個類可以被用來定義進入過渡的過程時間，延遲和曲線函數。
+					</li>
+					<li>
+						v-enter-to：2.1.8 版及以上定義進入過渡的結束狀態。在元素被插入之後下一幀生效 (與此同時 v-enter 被移除)，在過渡/動畫完成之後移除。
+					</li>
+					<li>v-leave：定義離開過渡的開始狀態。在離開過渡被觸發時立刻生效，下一幀被移除。</li>
+					<li>
+						v-leave-active：定義離開過渡生效時的狀態。在整個離開過渡的階段中應用，在離開過渡被觸發時立刻生效，在過渡/動畫完成之後移除。這個類可以被用來定義離開過渡的過程時間，延遲和曲線函數。
+					</li>
+					<li>
+						v-leave-to：2.1.8 版及以上定義離開過渡的結束狀態。在離開過渡被觸發之後下一幀生效 (與此同時 v-leave 被刪除)，在過渡/動畫完成之後移除。
+					</li>
+				</ol>
+			</div>
+			<transition name="my-slide">
+				<div v-if="isShow" class="content"></div>
+			</transition>
+			<button @click="isShowToggle">顯示/隱藏</button>
+
+		</div>
+
+		<div>
+			<p>參考資料: https://cn.vuejs.org/v2/guide/transitions.html</p>
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					isShow: true
+				},
+				methods: {
+					isShowToggle() { this.isShow = !this.isShow }
+				},
+				computed: {
+
+				},
+				watch: {
+
+				}
+			})
+		</script>
+	</body>
+
+</html>

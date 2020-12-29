@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<h1>文本輸入綁定</h1>
+			<h2>單行文本輸入綁定</h2>
+			<h2>{{username}}</h2>
+			<input type="text" v-model="username" name="" id="" value="" />
+			<h2>多行文本輸入綁定</h2>
+			<textarea v-model="username" rows="10" cols="30">
+			</textarea>
+			
+			<h1>checkbox 數據綁定</h1>
+			<label>狗狗</label>
+			<input type="checkbox" v-model="animals" value="狗狗" />
+			<label>貓貓</label>
+			<input type="checkbox" v-model="animals" value="貓貓" />
+			<label>猴猴</label>
+			<input type="checkbox" v-model="animals" value="猴猴" />
+			<div>
+				{{animals}}
+			</div>
+			
+			<h1>v-for + checkbox 的 value 綁定，v-model 綁定 value</h1>
+			<h2>v-for 遞迴產生 checkbox，v-bind:value 將 item 綁定到 input 的 value ，再將 value 通過 v-model 傳進 vue 實例</h2>
+			<span v-for="item in fruits">
+				<input type="checkbox" v-model="checkboxFruits" :id="item" :value="item" name="fruits" />
+				<label :for="item">{{item}}</label>
+			</span>
+			<h3>{{checkboxFruits}}</h3>
+			
+			<h1>v-for + radio 的 value 綁定，v-model 綁定 value</h1>
+			<h2>v-for 遞迴產生 radio，v-bind:value 將 item 綁定到 input 的 value ，再將 value 通過 v-model 傳進 vue 實例</h2>
+			<span v-for="item in drink">
+				<input type="radio" v-model="radioDrink" :id="item" :value="item" name="drink" />
+				<label :for="item">{{item}}</label>
+			</span>
+			<h3>{{radioDrink}}</h3>
+			
+			<h1>v-for select、option 的 value 綁定，v-model 綁定 value</h1>
+			<h2>v-for 遞迴產生 option，v-bind:value 將 item 綁定到 input 的 value ，再將 value 通過 v-model 傳進 vue 實例</h2>
+			<h3>
+			如果 <code>v-model</code> 表达式的初始值未能匹配任何选项，<code>&lt;select&gt;</code> 元素将被渲染为“未选中”状态。在 iOS 中，这会使用户无法选择第一个选项。
+			<br>
+			因为这样的情况下，iOS 不会触发 change 事件。因此，更推荐像&lt;option disabled value=""&gt;请选择&lt;/option&gt;这样提供一个值为空的禁用选项
+			</h3>
+			<select v-model="selectCity">
+				<option disabled value="">请选择</option>
+				<option v-for="item in citys" :value="item">{{item}}</option>
+			</select>
+			<h3>{{selectCity}}</h3>
+			
+			<h1>select multiple 多重選擇</h1>
+			<h2>因為是多重選擇，所以 v-model 應該要綁定數組</h2>
+			<h2>v-for 遞迴產生 option，v-bind:value 將 item 綁定到 input 的 value ，再將 value 通過 v-model 傳進 vue 實例</h2>
+			<select v-model="selectMultCity" multiple="multiple">
+				<option disabled value="">请选择</option>
+				<option v-for="item in citys" :value="item">{{item}}</option>
+			</select>
+			<h3>{{selectMultCity}}</h3>
+			
+			<h1>將 v-model 接收到的字串轉成數字</h1>
+			<h2>在 watch 中有監聽 age 可以打開 console.log 看看</h2>
+			<input type="text" v-model.number="age" name="" id="" value="" />
+			
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					username:'小明',
+					fruits:['蘋果','香蕉','芭樂','榴槤'],
+					drink:['奶茶','咖啡','紅茶','綠茶'],
+					citys:['北京','上海','廣州','深圳'],
+					checkboxFruits:[],
+					animals:[],
+					radioDrink:'',
+					selectCity:'',
+					selectMultCity:[],
+					age:13,
+				},
+				methods: {
+					
+				},
+				computed: {
+
+				},
+				watch: {
+					// 監聽 age 的變化
+					age(val){
+						console.log(val)
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
