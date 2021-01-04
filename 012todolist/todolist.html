@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+
+			.todoItem {
+				display: flex;
+				align-items: flex-end;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+
+			<h2>Do not use v-for index as key on &lt;transition-group&gt; children, this is the same as not using keys.</h2>
+			<h2>vue 建議使用 transition-group 時不要用 v-for 裡的index 作為 key</h2>
+			<h2>這裡改使用字串相加 index 的方式作為 key，:key="'notdone'+index"</h2>
+			<br>
+			<br>
+
+			<div>
+				<h1>輸入待辦事項</h1>
+				<input @keydown.13="inputTodo" v-model="todo" type="text" name="" id="">
+			</div>
+			<br>
+			<div>
+				<h1>待辦事項</h1>
+				<transition-group name="custom-classes-transition"
+					enter-active-class="animate__animated  animate__zoomInLeft"
+					leave-active-class="animate__animated  animate__slideOutRight">
+					<div v-for="(item, index) in notdone" :key="'notdone'+index" class="todoItem">
+						<div><input @click.prevent="todoIsDone(item,index,$event)" type="checkbox"></div>
+						<div>{{item.content}}</div>
+						<div><button @click.prevent="delTodo(item,index,$event)">刪除</button></div>
+					</div>
+				</transition-group>
+
+			</div>
+			<br>
+			<div>
+				<h1>已完成</h1>
+				<transition-group name="custom-classes-transition"
+					enter-active-class="animate__animated  animate__zoomInLeft"
+					leave-active-class="animate__animated  animate__slideOutRight">
+					<div v-for="(item, index) in done" :key="'done'+index" class="todoItem">
+						<div><input @click.prevent="todoIsDone(item,index,$event)" type="checkbox" checked></div>
+						<div>{{item.content}}</div>
+						<div><button @click.prevent="delTodo(item,index,$event)">刪除</button></div>
+					</div>
+				</transition-group>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					todolist: [],
+					todo: ''
+				},
+				methods: {
+					// 將數據存放到 localStorage
+					saveData() {
+						localStorage.todolist = JSON.stringify(this.todolist)
+					},
+					inputTodo() {
+						let dateTime = Date.now();
+						let obj = {
+							id: dateTime,
+							content: this.todo,
+							done: false
+						}
+						this.todolist.push(obj)
+						this.todo = ''
+						this.saveData()
+					},
+					todoIsDone(item, index, $event) {
+						item.done = !item.done
+						this.saveData()
+					},
+					delTodo(todoItem, todoIndex, $event) {
+						this.todolist.forEach((item, index) => {
+							if (todoItem.id == item.id) {
+								this.todolist.splice(index, 1)
+							}
+						})
+						this.saveData()
+					}
+				},
+				computed: {
+					notdone() {
+						let arr = this.todolist.filter((item, i) => {
+							return !item.done
+						})
+						return arr
+					},
+					done() {
+						let arr = this.todolist.filter((item, i) => {
+							return item.done
+						})
+						return arr
+					},
+				},
+				watch: {
+
+				},
+				// 如果 localStorage 的 todolist 有值，將賦值給 this.todolist
+				// 否則 this.todolist 為空數組
+				mounted(){
+					this.todolist=localStorage.todolist?JSON.parse(localStorage.todolist):[]
+				}
+			})
+		</script>
+	</body>
+
+</html>
