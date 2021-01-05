@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+
+			.redBg{
+				background-color: red;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h1>{{msg}}</h1>
+			<h1 :class="classname">{{msg}}</h1>
+			<button @click="addExclamationMark">加上驚嘆號</button>
+		</div>
+
+		<script type="text/javascript">
+			let app = new Vue({
+				el: '#app',
+				data: {
+					msg:'i am a msg',
+					classname:'redBg'
+				},
+				methods: {
+					addExclamationMark(){
+						this.msg+='!'
+					}
+				},
+				computed: {
+				},
+				watch: {
+				},
+				// beforeCreate 時，vue已經實例化，但還沒有綁定數據及事件
+				// 所以 this.msg 和 this.sayHello 是 undefined
+				beforeCreate () {
+					console.log(`beforeCreated: this: `,this)
+					console.log(`beforeCreated: this.msg: `,this.msg)
+					console.log(`beforeCreated: this.sayHello: `,this.sayHello)
+				},
+				// created 時，vue已經實例化，並將數據及事件綁定到 vue 實例上
+				// 所以 this.msg 被賦值成字串，this.sayHello 被賦值成函式
+				created () {
+					console.log(`created: this: `,this)
+					console.log(`created: this.msg: `,this.msg)
+					console.log(`created: this.sayHello: `,this.sayHello)
+				},
+				// beforeMount 時還未渲染視圖，根據數據生成的 dom 對象是獲取不到的
+				beforeMount() {
+					console.log(`beforeMount: this: `,this)
+					console.log(`beforeMount: this.msg: `,this.msg)
+					console.log(`beforeMount: this.sayHello: `,this.sayHello)
+					let el=document.querySelector('.redBg')
+					console.log(el)
+				},
+				// mounted 已經渲染視圖，可以獲取根據數據生成的 dom 對象
+				mounted() {
+					console.log(`mounted: this: `,this)
+					console.log(`mounted: this.msg: `,this.msg)
+					console.log(`mounted: this.sayHello: `,this.sayHello)
+					let el=document.querySelector('.redBg')
+					console.log(el)
+				},
+				// 數據已更新，但內容還未更新時觸發
+				beforeUpdate() {
+					console.log('beforeUpdate');
+				},
+				// 數據已更新，內容已更新時觸發
+				updated() {
+					console.log('updated');
+				},
+				beforeDestroy() {
+					console.log('beforeDestroy');
+				},
+				destroyed() {
+					console.log('destroyed');
+				},
+			})
+		</script>
+	</body>
+
+</html>
