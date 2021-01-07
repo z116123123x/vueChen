@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<!-- 3 @childemit="parentReceive" -->
+			<child-comp @child-emit="parentReceive" v-for="(item, index) in parentDataArr" :key="index" :child-props="item">
+			</child-comp>
+			<div>被選擇的data : {{formChild}}</div>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('child-comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['childProps'],
+				// 1 @click="emitdata(childProps)"
+				template:
+					`
+					<div>
+						<h2>{{childProps}}</h2>
+						<button @click="emitdata(childProps)">選擇data</button>
+					</div>
+					`,
+				methods: {
+					// 2 this.$emit('emit', childProps)
+					emitdata(childProps) {
+						// console.log(childProps)
+						this.$emit('child-emit', childProps)
+					}
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					parentDataArr: ['parent data 0', 'parent data 1', 'parent data 2'],
+					parentDataStr: 'parent data 0',
+					formChild: ''
+				},
+				methods: {
+					// 4 parentReceive(){}
+					parentReceive(data) {
+						console.log('parentReceive: ' + data)
+						this.formChild = data
+					}
+				},
+			})
+		</script>
+	</body>
+
+</html>

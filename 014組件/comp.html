@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h1>使用 v-if 控制組件 hello-comp 會觸發生命週期函數</h1>
+			<h1>因為 v-if 會銷毀或重新渲染組件</h1>
+			<h1>使用 v-show 則不會，因為 v-show 只是將元素 display:none</h1>
+			<hello-comp v-if="isShow"></hello-comp>
+			<hello-comp v-show="isShow"></hello-comp>
+			<br>
+			<button @click="compToggle">顯示/銷毀組件</button>
+		</div>
+
+		<script type="text/javascript">
+
+			// 組件要在 vue 實例化之前創建好 (全局註冊)
+			Vue.component('hello-comp', {
+				// 組件裡的 data 不是對象而是一個函數返回一個對象
+				// 因為組件裡的 data 可能會重複利用
+				// 因為每次調用組件都要返回一個數據
+				data() {
+					return {
+						msg: 'i am helloComp\'s msg'
+					}
+				},
+				methods: {
+					addExclamationMark(){
+						this.msg+='!'
+					}
+				},
+				// template 裡面放組件的視圖模板
+				// Component template should contain exactly one root element.
+				// 組件的視圖模板裡只能有一個根元素，其他元素必須要放在根元素裡面
+				template: `<div><h1>{{msg}}</h1><button @click="addExclamationMark">加上驚嘆號</button></div>`,
+				// 組件跟 vue 實例一樣有生命週期
+				beforeCreate () {
+					console.log(`beforeCreated`)
+				},
+				created () {
+					console.log(`created`)
+				},
+				beforeMount() {
+					console.log(`beforeMount`)
+				},
+				mounted() {
+					console.log(`mounted`)
+				},
+				beforeUpdate() {
+					console.log('beforeUpdate');
+				},
+				updated() {
+					console.log('updated');
+				},
+				beforeDestroy() {
+					console.log('beforeDestroy');
+				},
+				destroyed() {
+					console.log('destroyed');
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				// 一般的 vue 實例裡面的 data 是一個對象
+				data: {
+					isShow:true
+				},
+				methods: {
+					compToggle(){
+						this.isShow=!this.isShow
+					}
+				},
+				computed: {},
+				watch: {},
+				beforeCreate() { },
+				created() { },
+				beforeMount() { },
+				mounted() { },
+				beforeUpdate() { },
+				updated() { },
+			})
+
+
+		</script>
+	</body>
+
+</html>

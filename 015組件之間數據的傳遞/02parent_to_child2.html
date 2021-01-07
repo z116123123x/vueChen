@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h1>父組件將值傳遞到子組件的 model 的 props 後就可以放到子組件 model 的 template</h1>
+			<br>
+			<br>
+			<h2>在視圖的子組件裡寫子組件的 model 的 props 屬性</h2>
+			<child-comp child-props="我是寫在視圖裡的"></child-comp>
+			<br>
+			<h2>在視圖的子組件裡 v-bind 子組件的 model 的 props 屬性</h2>
+			<h2>v-bind 裡面只能寫變數，這裡在屬性值裡使用單引號表示變數是字串</h2>
+			<child-comp :child-props="'我是寫在視圖裡的字串變數'"></child-comp>
+			<br>
+			<h2>在視圖的子組件裡 v-bind 子組件的 model 的 props 屬性</h2>
+			<h2>視圖裡的 v-bind:props 屬性值裡放父組件 model 裡的 data</h2>
+			<h2>就可以將父組件 model 的 data 傳遞到子組件 model 的 props</h2>
+			<child-comp :child-props="parentArr[0]"></child-comp>
+			<br>
+			<h2>視圖子組件 v-for + 父組件傳值到子組件</h2>
+			<h2>視圖子組件 v-for 迭代父組件 model 的 data</h2>
+			<h2>視圖子組件 v-bind 子組件 model 的 props，屬性值是 v-for 迭代出來的 item</h2>
+			<child-comp v-for="(item, index) in parentArr" :index="index" :key="index" :child-props="item"></child-comp>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('child-comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['childProps','index'],
+				template:
+					`<div>
+						<h1>{{index}}  : {{childProps}}</h1>
+					</div>`,
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					parentArr: ['i am parent value0','i am parent value1','i am parent value2']
+				},
+			})
+		</script>
+	</body>
+
+</html>

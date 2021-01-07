@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h2>在視圖中使用的 v-bind 會綁定父組件的 data</h2>
+			<h2>在視圖中的 vue 實例 ( 父組件 ) 裡面的子組件使用 v-bind，會將 model 中父組件的 data 綁定到子組件的 props</h2>
+			<br>
+			<h2>用法</h2>
+			<h2>視圖：v-bind:child-props="parentVal"</h2>
+			<h2>model：子組件：props: ['childProps'],</h2>
+			<br>
+			<child-comp :child-props="parentVal"></child-comp>
+			<br>
+			<p>html 裡不能用駝峰命名法 (英文大寫)，只能用烤肉串命名法
+				<a href="https://zhuanlan.zhihu.com/p/35098504">https://zhuanlan.zhihu.com/p/35098504</a>
+			</p>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('child-comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['childProps'],
+				template:
+					`<div>
+						<h1>{{childProps}}</h1>
+					</div>`,
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					parentVal: 'i am parent value'
+				},
+			})
+		</script>
+	</body>
+
+</html>

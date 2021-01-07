@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<!-- 4 @emit-props-to-parent="receiveChildProps" -->
+			<child-comp v-for="(item, index) in parentSchoolArr" :key="index" :child-index="index"
+				:child-school-props="item" @emit-props-to-parent="receiveChildProps">
+			</child-comp>
+			<h2>選中的學校是：{{parentSchoolStr}}</h2>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('child-comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['childSchoolProps', 'childIndex'],
+				// 1 @click="transferDataToParent(childSchoolProps)"
+				template:
+					`
+					<div>
+						<h2>{{childIndex}} : {{childSchoolProps}}</h2>
+						<button @click="transferDataToParent(childSchoolProps)">選擇學校</button>
+					</div>
+					`,
+				methods: {
+					//2 transferDataToParent(childSchoolProps)
+					//3 his.$emit('emit-props-to-parent',childSchoolProps)
+					transferDataToParent(childSchoolProps) {
+						// console.log(childSchoolProps)
+						// Vue.component 中有定義一個向父元素傳值的方法 $emit
+						// $emit 觸發的事件盡量都用小寫或烤肉串命名法
+						this.$emit('emit-props-to-parent',childSchoolProps)
+					}
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					parentSchoolArr: ['台灣大學', '清華大學', '交通大學', '成功大學'],
+					parentSchoolStr: ''
+				},
+				methods: {
+					// 5 receiveChildProps(childProps){}
+					receiveChildProps(childProps){
+						console.log('接收子組件數據')
+						this.parentSchoolStr=childProps
+					}
+				},
+			})
+		</script>
+	</body>
+
+</html>
