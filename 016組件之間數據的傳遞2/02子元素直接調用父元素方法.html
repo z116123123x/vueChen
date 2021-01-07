@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h1>
+				直接調用父組件的函數
+			</h1>
+			<br>
+			<child-comp v-for="(item, index) in parentArr" :key="index" :child-index="index" :school="item">
+			</child-comp>
+			<h2>選中的學校是：{{parentStr}}</h2>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('child-comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['school', 'childIndex'],
+				template:
+					`
+					<div>
+						<h2>{{childIndex}} : {{school}}</h2>
+						<button @click="callParentFn(school)">選擇學校</button>
+					</div>
+					`,
+				methods: {
+					callParentFn(school) {
+						// console.log(this.$parent.modifyParentStr)
+						// this.$parent 就是父組件
+						// 找到父組件就可以直接調用父組件的函數了
+						this.$parent.modifyParentStr(school)
+					}
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					parentArr: ['台灣大學', '清華大學', '交通大學', '成功大學'],
+					parentStr: ''
+				},
+				methods: {
+					// 創建修改 parentStr 的方法
+					modifyParentStr(data) {
+						this.parentStr = data
+					}
+				},
+			})
+		</script>
+	</body>
+
+</html>
