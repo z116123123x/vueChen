@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<h2>
+			傳遞數據到子組件
+		</h2>
+		<ol>
+			<li>
+				&lt;comp :comp-str="appStr"&gt;&lt;/comp&gt;
+				<br>
+				props: ['compStr'],
+				<br>
+				template:
+				<br>
+				`
+				<br>
+				&lt;div&gt;
+				<br>
+				&nbsp;&nbsp;&lt;input type="text" :value="compStr"&gt;
+				<br>
+				&lt;/div&gt;
+				<br>
+				`,
+			</li>
+		</ol>
+		<h2>
+			通過向子組件傳入修改父組件數據的方法，實現v-model
+		</h2>
+		<ol>
+			<li>
+				父組件定義一個修改 data 的 methods: modifyAppStr 函數
+			</li>
+			<li>
+				將 modifyAppStr 函數綁定到子組件
+				<br>
+				&lt;comp :comp-str="appStr" :action="modifyAppStr"&gt;&lt;/comp&gt;
+			</li>
+			<li>
+				子組件 template 調用 methods callAction 函數，傳入參數 $event.target.value
+			</li>
+			<li>
+				子組件 methods 創建函數，調用props裡的action函數，修改父組件data
+				<br>
+				callAction(data){
+				<br>
+				&nbsp;&nbsp;this.action(data)
+				<br>
+				}
+			</li>
+		</ol>
+		<br>
+		<br>
+		<div id="app">
+			<comp :comp-str="appStr" :action="modifyAppStr"></comp>
+			{{appStr}}
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['compStr', 'action'],
+				// 將 template 的 input value 作為 callAction 的參數
+				template:
+					`
+					<div>
+						<input type="text" :value="compStr" @input="callAction($event.target.value)">
+					</div>
+					`,
+				methods: {
+					callAction(data) {
+						this.action(data)
+					}
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					appStr: ''
+				},
+				methods: {
+					modifyAppStr(data) {
+						this.appStr = data
+					}
+				},
+			})
+		</script>
+	</body>
+
+</html>

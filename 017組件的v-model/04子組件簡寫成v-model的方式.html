@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h1>$emit('input',$event.target.value) emit 要命名成 input 才能 @input</h1>
+			<h1>$emit 事件跟v-on:input事件名稱相同</h1>
+			<h1>才能簡寫成 v-model</h1>
+			<comp :comp-str="appStr" @input="appStr=$event"></comp>
+			<comp v-model="appStr"></comp>
+			<h2>{{appStr}}</h2>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['compStr'],
+				template:
+					`
+					<div>
+						<input type="text" :value="compStr" @input="$emit('input',$event.target.value)">
+					</div>
+					`,
+				methods: {
+					
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					appStr:''
+				},
+				methods: {
+				},
+			})
+		</script>
+	</body>
+
+</html>

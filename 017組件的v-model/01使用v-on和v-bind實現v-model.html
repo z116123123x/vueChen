@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h1>input 事件讓 app.str 獲取當前輸入的 input 的 value</h1>
+			<h1>再通過 v-bind 讓 input 的 value 綁定 app.str</h1>
+			<input type="text" @input="str=$event.target.value" :value="str">
+			<h2>{{str}}</h2>
+			<p>參考資料: <a href="https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model">https://cn.vuejs.org/v2/guide/components.html#%E5%9C%A8%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-v-model</a></p>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('child-comp', {
+				data() {
+					return {
+					}
+				},
+				props: [],
+				template:
+					`
+					
+					`,
+				methods: {
+					
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					str:''
+				},
+				methods: {
+					
+				},
+			})
+		</script>
+	</body>
+
+</html>

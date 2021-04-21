@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<h1>第二種寫法直接傳值到 appStr，不用透過 app 的 methods</h1>
+			<comp :comp-str="appStr" @emit-data="appStr=$event"></comp>
+			<h2>{{appStr}}</h2>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['compStr'],
+				template:
+					`
+					<div>
+						<input type="text" :value="compStr" @input="$emit('emit-data',$event.target.value)">
+					</div>
+					`,
+				methods: {
+					
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					appStr:''
+				},
+				methods: {
+				},
+			})
+		</script>
+	</body>
+
+</html>

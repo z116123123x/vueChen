@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<div id="app">
+			<alert-comp :propalert="alert">
+				<p>利用 SLOT 插入元素</p>
+				<p>這裡的鬍子模板語法只能寫入父組件的 data</p>
+				<p>子組件的標籤裡都是放父組件的東西</p>
+				{{alert2}}
+			</alert-comp>
+		</div>
+
+		<script type="text/javascript">
+			Vue.component('alert-comp', {
+				data() {
+					return {
+					}
+				},
+				props: ['propalert'],
+				template:
+					`
+					<div class="alert">
+						<h2>溫馨提示</h2>
+						<div class="content">
+							{{propalert}}
+							<slot></slot>
+						</div>
+					</div>
+					`,
+				methods: {
+					
+				},
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					alert:'小心熊出沒',
+					alert2:'小心地滑'
+				},
+				methods: {
+					
+				},
+			})
+		</script>
+	</body>
+
+</html>
