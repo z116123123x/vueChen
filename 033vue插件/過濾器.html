@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>通過過濾器顛倒 msg</h1>
+      <h2>寫法: |過濾器</h2>
+      <h1>{{msg|msgFilter}}</h1>
+    </div>
+    <script type="text/javascript">
+      Vue.filter('msgFilter', function (val) {
+        console.log(val)
+        return val.split('').reverse().join('')
+      })
+      let app = new Vue({
+        el: '#app',
+        data: {
+          msg: 'i am msg'
+        },
+        filter: {
+          // 組件裡的 filter
+        },
+        mounted() {
+        }
+      })
+
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="./node_modules/animate.css/animate.css">
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				box-sizing: border-box;
+			}
+
+			a {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+
+	<body style="padding:1rem;">
+		<h2>用 component 標籤跟 is 屬性決定要使用哪個組件</h2>
+		<h2>父組件的 components 裡要註冊子組件</h2>
+		<h2>父組件的 methods 裡的 this.$options.components 可以找到子組件</h2>
+		<h2>在利用父組件的方法改變 :is="com" 的 com 變數，將他指向想要指向的組件</h2>
+		<br>
+		<br>
+		<div id="app">
+			<component :is="com"></component>
+			<button @click="selectCom(1)">首頁</button>
+			<button @click="selectCom(2)">列表</button>
+			<button @click="selectCom(3)">新聞</button>
+			<button @click="selectCom(4)">個人</button>
+		</div>
+
+		<script type="text/javascript">
+			let com1 = Vue.component('index-com', {
+				template:
+					`
+					<div>
+						<h2>首頁</h2>
+					</div>
+					`,
+			})
+
+			let com2 = Vue.component('list-comp', {
+				template:
+					`
+					<div>
+						<h2>列表</h2>
+					</div>
+					`,
+			})
+
+			let com3 = Vue.component('news-comp', {
+				template:
+					`
+					<div>
+						<h2>新聞</h2>
+					</div>
+					`,
+			})
+
+			let com4 = Vue.component('me-comp', {
+				template:
+					`
+					<div>
+						<h2>個人</h2>
+					</div>
+					`,
+			})
+
+			let app = new Vue({
+				el: '#app',
+				data: {
+					com:com1
+				},
+				methods: {
+					selectCom(num){
+						this.com=this.$options.components[`com${num}`]
+					}
+				},
+				components:{
+					com1,com2,com3,com4,
+				}
+			})
+		</script>
+	</body>
+
+</html>

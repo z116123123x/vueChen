@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <input v-focus v-model="msg" type="text">
+    </div>
+    <script type="text/javascript">
+      // 注册一个全局自定义指令 `v-focus`
+      Vue.directive('focus', {
+        bind() {
+          console.log('bind：只調用一次，指令第一次綁定到元素時調用。在這裡可以進行一次性的初始化設置。')
+        },
+        // 当被绑定的元素插入到 DOM 中时……
+        inserted(el) {
+          console.log('inserted：被綁定元素插入父節點時調用')
+          console.log('--- 默認參數是自定義指令綁定到的元素 ---')
+          console.log(el)
+          // 聚焦元素
+          el.focus()
+        },
+        update() {
+          console.log('update：所在組件的VNode更新時調用。')
+        },
+        componentUpdated() {
+          console.log('componentUpdated：指令所在組件的VNode及其子VNode全部更新後調用。')
+        },
+        unbind() {
+          console.log('unbind：只調用一次，指令與元素解綁時調用。')
+        },
+      })
+
+      let app = new Vue({
+        el: '#app',
+        data: {
+          msg: 'i am msg'
+        },
+        mounted(){
+          console.log(this)
+        }
+      })
+
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <input v-focus v-model="msg" type="text">
+      <div v-lc.enter="msg"></div>
+    </div>
+    <script type="text/javascript">
+      // 注册一个全局自定义指令 `v-focus`
+      Vue.directive('focus', {
+        bind() {
+        },
+        // 当被绑定的元素插入到 DOM 中时……
+        inserted(el) {
+          // 聚焦元素
+          el.focus()
+        },
+        update() {
+        },
+        componentUpdated() {
+        },
+        unbind() {
+        },
+      })
+
+      // 注册一个全局自定义指令 `v-lc`
+      Vue.directive('lc', {
+        bind() {
+        },
+        // 当被绑定的元素插入到 DOM 中时……
+        inserted(el, binding, vnode, oldVnode) {
+          console.log('--- el ---')
+          console.log(el)
+          console.log('--- binding ---')
+          console.log(binding)
+          console.log('--- vnode ---')
+          console.log(vnode)
+          console.log('--- oldVnode ---')
+          console.log(oldVnode)
+
+          // 循環生成一個 data: msg 的列表
+          let str = '<ul>'
+          for (let i = 0; i < 5; i++) {
+            str += `<li>${binding.rawName}: ${binding.value}</li>`
+          }
+          str += '</ul>'
+          el.innerHTML = str
+        },
+        update(el, binding, vnode, oldVnode) {
+          // 所在组件的 VNode 更新时循環生成一個 data: msg 的列表
+          let str = '<ul>'
+          for (let i = 0; i < 5; i++) {
+            str += `<li>${binding.rawName}: ${binding.value}</li>`
+          }
+          str += '</ul>'
+          el.innerHTML = str
+        },
+        componentUpdated() {
+        },
+        unbind() {
+        },
+      })
+
+      let app = new Vue({
+        el: '#app',
+        data: {
+          msg: 'i am msg'
+        },
+        mounted(){
+          console.log(this)
+        }
+      })
+
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <div v-focus></div>
+    </div>
+    <script type="text/javascript">
+      // Vue.use(lcPlugin) 會調用 `lcPlugin.install(Vue)`
+      // let lcPlugin = {
+      //   install(Vue) {
+      //     console.log(Vue)
+      //     console.log('安裝LC插件')
+      //   }
+      // }
+      // Vue.use(lcPlugin)
+
+      let lcPlugin = {
+        install(Vue, options) {
+          console.log('安裝LC插件')
+          // 1. 添加全局方法或 property
+          // 會在 Vue 實例(app)的 $root 中的 __proto__ 中的 constructor 裡
+          Vue.bgColor = 'skyblue'
+          Vue.changBg = function () {
+            document.body.style.background = Vue.bgColor
+            // 逻辑...
+          }
+
+          // 2. 添加全局指令
+          Vue.directive('focus', {
+            bind(el, binding, vnode, oldVnode) {
+              // 逻辑...
+              el.innerHTML=`<h1>focus</h1>`
+            }
+          })
+
+          // 3. 注入组件选项
+          Vue.mixin({
+            created: function () {
+              // 逻辑...
+              console.log('這是混入的生命週期')
+            }
+          })
+
+          // 4. 添加实例方法
+          // console 執行 app.$changeColor() 可以調用 Vue.changBg()
+          Vue.prototype.$changeColor = function (methodOptions) {
+            // 逻辑...
+            Vue.changBg()
+          }
+        }
+      }
+      Vue.use(lcPlugin)
+
+      let app = new Vue({
+        el: '#app',
+        data: {
+        },
+        mounted(){
+          console.log(this)
+        }
+      })
+
+    </script>
+  </body>
+
+</html>

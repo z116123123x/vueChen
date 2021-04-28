@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="./js/socketio.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<h1>an</h1>
+		<div>
+			
+			<p>嘗試在console執行</p>
+			<p>con.emit('sendtoserver', {</p>
+			<p>form: '發送者ID',</p>
+			<p>to: '接收者ID',</p>
+			<p>content: 'MSG',</p>
+			<p>})</p>
+			
+		</div>
+		<script>
+
+			// console.log(io)
+			let con = io.connect('http://localhost:3000')
+
+			con.on('connect', function (data) {
+				console.log('連接事件成功')
+				console.log('連接事件的data:',data)
+			})
+
+			// 監聽服務器端有無發送news事件
+			con.on('news', function (data) {
+				console.log(data)
+			})
+
+			function sendtoserver() {
+				// 對伺服器發送'my other event'事件
+				con.emit('my other event', {
+					username: 'an',
+					chatcontent: 'hi',
+					where: 'form client'
+				})
+			}
+
+
+			// 監聽服務器端有無發送'server study'事件
+			con.on('server study', function (data) {
+				console.log(data)
+			})
+
+			// 監聽服務器端有無發送'addUser'事件
+			// 服務器的'addUser'事件會傳遞自己的id
+			con.on('addUser', function (data) {
+				console.log(data)
+			})
+
+			// 監聽服務器端有無發送'senttoclient'事件
+			con.on('senttoclient', function (data) {
+				console.log(data)
+			})
+
+		</script>
+	</body>
+
+</html>

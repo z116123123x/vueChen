@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<!-- 引入客戶端的 socketio.js -->
+		<script src="./js/socketio.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<script>
+			// console.log(io)
+			// io.connect('http://localhost:端口號')
+			let con = io.connect('http://localhost:8000')
+			// 監聽有無連接上'http://localhost:8000'
+			con.on('connect', function (data) {
+				console.log('連接事件')
+				console.log(data)
+			})
+			// 監聽後端有無發送news事件
+			con.on('news', function (data) {
+				console.log(data)
+			})
+			// 發送給後端'my other event'事件
+			// 並傳遞下面的數據
+			// {
+			// 	username:'an',
+			// 	chatcontent:'hi',
+			// 	where:'form client'
+			// }
+			con.emit('my other event',{
+				username:'an',
+				chatcontent:'hi',
+				where:'form client'
+			})
+		</script>
+	</body>
+
+</html>

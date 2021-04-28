@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="./js/socketio.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<h1>cindy</h1>
+		<script>
+
+			// console.log(io)
+			let qq = io.connect('http://localhost:3000/qq')
+			qq.on('connect', function (data) {
+				console.log('連接事件')
+				console.log(data)
+			})
+			// 監聽服務器端 qq 命名空間有無發送news事件
+			qq.on('news', function (data) {
+				console.log(data)
+			})
+
+			let wx = io.connect('http://localhost:3000/wx')
+			wx.on('connect', function (data) {
+				console.log('連接事件')
+				console.log(data)
+			})
+			// 監聽服務器端 wx 命名空間有無發送news事件
+			wx.on('news', function (data) {
+				console.log(data)
+			})
+
+		</script>
+	</body>
+
+</html>

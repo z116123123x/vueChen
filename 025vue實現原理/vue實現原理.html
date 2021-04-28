@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+  </head>
+
+  <body>
+    <div id="app">
+      {{msg2}}
+      <input v-model="msg2" type="text">
+      <h1>{{msg2}}</h1>
+      <div>
+        {{msg2}}
+        <div>
+          {{msg2}}
+        </div>
+      </div>
+      <!-- v-html 綁定的是 h1 元素的 innerHTML 屬性 -->
+      <h1 v-html="msg2">
+      </h1>
+      <button @click="changeEvent">修改msg</button>
+
+    </div>
+    <script>
+      class Vue {
+        constructor(options) {
+          // 通過選擇獲取根對象
+          this.$el = document.querySelector(options.el)
+
+          // 生命週期 - 數據創造之前
+          if (typeof options.beforeCreate == 'function') {
+            options.beforeCreate.bind(this)()
+          }
+
+          this.$options = options
+          // this.$watchEvent[key] = [event(事件物件),event,event]
+          // 設置一個對象專門保存修改更新事件物件
+          this.$watchEvent = {}
+          // 代理 options 的 data 數據 // 將 options 裡的 data 變成 app 的屬性
+          this.proxyData()
+
+          // 觀察(劫持)設置事件
+          this.observe()
+
+          // 生命週期 - 數據創造之後
+          if (typeof options.created == 'function') {
+            options.created.bind(this)()
+          }
+
+          // 生命週期 - 掛載前
+          if (typeof options.beforeMount == 'function') {
+            options.beforeMount.bind(this)()
+          }
+
+          // 把 view 的數據和事件進行綁定
+          this.compile(this.$el)
+
+          // 生命週期 - 掛載後
+          if (typeof options.mounted == 'function') {
+            options.mounted.bind(this)()
+          }
+
+        }
+        // proxy: 代理
+        proxyData() {
+          // 循環通過 set, get 方法實現代理數據
+          // 將實例化時的 this.$options.data 參數都轉成 app 的屬性
+          // 後面再藉由 observe() 觀察 this.$options.data  
+          for (const key in this.$options.data) {
+            // Object.defineProperty(obj 要定義屬性的物件, prop 要被定義或修改的屬性名字, descriptor 要定義或修改物件敘述內容(配置))
+            Object.defineProperty(this, key, {
+              // Configurable 跟 Writable 的差別在 Configurable 決定 Object 的 Property 的 descriptor (配置) 能不能被修改
+              // Writable 則是決定 Object 的 Value 能不能被重新賦值
+              // https://stackoverflow.com/questions/23590502/difference-between-configurable-and-writable-attributes-of-an-object
+              // https://ithelp.ithome.com.tw/articles/10197826
+              configurable: false, // 能不能重新設置
+              enumerable: true, // 能不能迭代
+              // value:'定義值', // 定義值
+              // writable: Boolean  // 能不能修改值
+
+              // https://juejin.cn/post/6844903801472679949
+              // https://linwei5316.medium.com/%E6%B7%B1%E5%85%A5-javascript-%E7%9A%84%E7%89%A9%E4%BB%B6%E5%B1%AC%E6%80%A7-7000ed4a8484
+              // get 與 set
+              // get()只要讀取屬性值，就會調用該屬性的get方法
+              // set()只要對此屬性值做修改，就會調用該屬性的set方法
+              // Getter 為讀取屬性時調用的函數. Setter 為設置屬性是調用的函數, Setter 會有一個參數, 即設置的那個值.
+              get() {
+                // 作為 getter 形式，為屬性存在的函式，如果沒有 getter 的話則回傳 undefined。函式回傳將用於屬性值。
+                // 這裡的 getter 會先執行一次，回傳值就是這個 Object 的 value
+                return this.$options.data[key]
+              },
+              set(val) { // val 是修改此屬性的值 // app.msg = 'aa' 則 aa 就是 val
+                this.$options.data[key] = val
+                // console.log(this.$options.data[key])
+                console.log('---proxy set---')
+              }
+            })
+          }
+        }
+
+        observe() {
+          // 觀察(劫持)事件
+          // 觀察 app.$options.data
+          // 將 app.$options.data 中的每一項數據都變成物件，並給物件配置 setter 
+          // 只要 app.$options.data 中的某一項數據發生修改就會觸發 setter
+          // setter 就會調用 app.$watchEvent[key] 這個陣列裡的每一個 Watch 物件裡的 update 方法
+          for (const key in this.$options.data) {
+            // 拷貝一份 data 到 value 供 Object 的 getter 和 setter 使用，避免修改到 Object 本身造成死迴圈
+            let value = this.$options.data[key]
+            let that = this
+            Object.defineProperty(this.$options.data, key, { // 對 data 裡的每一個屬性進行配置
+              configurable: false, // 能不能重新設置
+              enumerable: true, // 能不能迭代
+              get() {
+                // 這裡不能使用 this.$options.data[key] 是因為這裡的 this 不是指向 app ，而是指向 this.$options.data (app.msg)
+                // 如果 return this[key] 會變成 get 自己，再次觸發 get ，變成死迴圈
+                // console.log('觸發獲取內容事件')
+                return value
+              },
+              set(val) { // val 是修改此屬性的值 // app.msg = 'aa' 則 aa 就是 val
+                // 如果 this[key] = val 相當於 app.msg = val
+                // 執行 app.msg = 'aa' 則此 obj 的值被設置，觸發 set
+                // set 執行 app.msg = 'aa'，則此 obj 的值又被設置了一次，再一次觸發 set，造成死迴圈
+                console.log('觸發設置事件')
+                console.log(this)
+                value = val
+                // 判斷 that.$watchEvent[key] 裡面是否有事件物件，有的話循環執行裡面的update()
+                // 觸發以這個 key 值的更新事件
+                if (that.$watchEvent[key]) {
+                  that.$watchEvent[key].forEach((item, i) => {
+
+                    // 生命週期 - 數據更新前
+                    if (typeof that.$options.beforeUpdate == 'function') {
+                      that.$options.beforeUpdate.bind(this)()
+                    }
+
+                    item.update()
+
+                    // 生命週期 - 數據更新後
+                    if (typeof that.$options.updated == 'function') {
+                      that.$options.updated.bind(this)()
+                    }
+
+                  });
+                }
+              }
+            })
+          }
+        }
+
+        compile(cNode) {
+          // 把 view 的數據和事件進行綁定
+          // 判斷根元素裡的節點各有甚麼屬性
+          // 根據不同的屬性將實例化的 new Watch() push 到 this.$watchEvent[vmKey] == app.$watchEvent['msg2']
+          // 當數據變化就會觸發 observe() 的 setter 
+          // observe() 的 setter 就會循環調用 app.$watchEvent['msg2'] 裡的 new Watch()
+
+          // constructor 調用 compile 會傳入形參 this.$el == cNode 獲取根元素
+          // cNode.childNodes 獲取根元素的所有子節點
+          // 為了使用遞迴找到所有子孫節點，改為使用傳參的方式拿到節點
+          cNode.childNodes.forEach((node, index) => {
+            if (node.nodeType == 1) { // node.nodeType == 1 元素類型
+
+              // getAttribute 獲取元素屬性, hasAttribute 判斷是否有這個元素屬性
+              // 判斷這個元素是否有 v-html 屬性
+              if (node.hasAttribute('v-html')) {
+                let vmKey = node.getAttribute('v-html').trim() // 找到節點裡的v-html屬性的屬性值 // 這裡是 msg2
+                if (this.hasOwnProperty(vmKey)) { // 判斷 app (this) 裡面有沒有 msg2 (vmKey)
+                  node.innerHTML = this[vmKey] // 將節點的 html 替換成 this[vmKey], this[vmKey] == app[msg2]
+
+                  let watcher = new Watch(this, vmKey, node, 'innerHTML')
+                  if (this.$watchEvent[vmKey]) {
+                    // 將 new Watch(this, vmKey, node, 'innerHTML') push 到 app.$watchEvent.msg2 陣列中
+                    // 只要 app.msg2 的資料被修改 observe() 的 setter 就會被觸發
+                    // observe() 的 setter 就會循環調用 app.$watchEvent['msg2'] 中的 Watch 物件
+                    this.$watchEvent[vmKey].push(watcher)
+                  } else {
+                    // app.$watchEvent['msg2'] 沒有值的話就給他空數組
+                    this.$watchEvent[vmKey] = []
+                    this.$watchEvent[vmKey].push(watcher)
+                  }
+                  // 刪除節點屬性
+                  node.removeAttribute('v-html')
+                }
+              }
+
+              // 實現 v-model overview
+              // 執行 this[vmKey] = node.value 時， this[vmKey] == app.msg2 的值被修改
+              // app.msg2 的值被修改時，觸發 observe() 裡的 setter
+              // observe() 裡的 setter 就會循環調用 app.$watchEvent.msg2.update()
+              // app.$watchEvent[key] == app.$watchEvent['msg2']
+              // app.$watchEvent 是一個物件用來處存陣列，陣列裡放 Watch 物件
+              // app.$watchEvent.msg2: Array(2)
+              // 0: Watch {vm: Vue, key: "msg2", node: input, attr: "value"}
+              // 1: Watch {vm: Vue, key: "msg2", node: h1, attr: "innerHTML"}
+
+              // 判斷這個元素是否有 v-model 屬性
+              if (node.hasAttribute('v-model')) {
+                let vmKey = node.getAttribute('v-model').trim() // 找到節點裡的 v-model 屬性的屬性值 // 這裡是 msg2
+                if (this.hasOwnProperty(vmKey)) { // 判斷 app (this) 裡面有沒有 msg2 (vmKey)
+                  node.value = this[vmKey] // 將節點的 value 替換成 this[vmKey], this[vmKey] == app[msg2]
+                  let watcher = new Watch(this, vmKey, node, 'value')
+                  if (this.$watchEvent[vmKey]) {
+                    // 將 new Watch(this, vmKey, node, 'value') push 到 app.$watchEvent.msg2 陣列中
+                    // 只要 app.msg2 的資料被修改 observe() 的 setter 就會被觸發
+                    // observe() 的 setter 就會循環調用 app.$watchEvent['msg2'] 中的 Watch 物件
+                    this.$watchEvent[vmKey].push(watcher)
+                  } else {
+                    // app.$watchEvent['msg2'] 沒有值的話就給他空數組
+                    this.$watchEvent[vmKey] = []
+                    this.$watchEvent[vmKey].push(watcher)
+                  }
+                  // 刪除節點屬性
+                  node.removeAttribute('v-model')
+                  node.addEventListener('input', () => { // 利用箭頭函數或去父層的 this 也就是 app
+                    // 如果使用一般匿名函數 this 會指向 node (input 元素) 而不是 app
+                    this[vmKey] = node.value // app.msg2 = input.value
+                  })
+                }
+              }
+
+              // 判斷這個元素是否有 @click 屬性
+              if (node.hasAttribute('@click')) {
+                let vmKey = node.getAttribute('@click').trim() // 找到節點裡的 @click 屬性的屬性值 // 這裡是 changeEvent()
+                // if (this.hasOwnProperty(vmKey))
+                // 這裡不能判斷 this 裡面有沒有 changeEvent ，因為我們的 proxy 只有代理 data 沒有代理 methods
+                // 所以 this == app 裡面沒有 changeEvent
+                node.addEventListener('click', (event) => {
+                  // methods: {
+                  //   changeEvent() {
+                  //     this.msg2 = 'call changeEvent method'
+                  //   }
+                  // }
+                  // this.$options.methods[vmKey](event)
+                  // 上面這種方式不能使用
+                  // 因為上面的 this 指的是 app.$options.methods
+                  // 也就是會執行 app.$options.methods.msg2 = "call changeEvent method"
+                  // 所以會變成 app.$options.methods 增加一個屬性 msg2: "call changeEvent method"
+
+                  // 將 this 指向到 app，app.eventFn 執行 this.msg2 = 'call changeEvent method'
+                  // 就會是改變 app.msg2，app.msg2 = 'call changeEvent method'
+                  // app 的數據被改變才會觸發 obvserve 函數的 setter 及裡面的 Watch
+                  this.eventFn = this.$options.methods[vmKey]
+                  this.eventFn(event)
+
+                  // 可以簡寫成
+                  // this.$options.methods[vmKey].bind(this)(event)
+                })
+                // 刪除節點屬性
+                node.removeAttribute('@click')
+              }
+
+              // https://medium.com/tomsnote/javascript%E7%9A%84%E9%81%9E%E8%BF%B4-recursive-f8ce5d084533
+              // 利用遞迴獲取所有子孫節點
+              // 遞迴就是運用函數可以呼叫函數本身，並搭配邊界條件(終止條件)，來達到可以簡化迴圈的效果。
+              // 判斷現在的節點還有沒有子節點，如果還有子節點，就在調用一次 this.compile(node) 編譯目前的節點
+              // 直到被編譯的節點沒有子節點 node.childNodes.length > 0 == false
+              if (node.childNodes.length > 0) {
+                this.compile(node)
+              }
+
+            }
+            if (node.nodeType == 3) { // node.nodeType == 3 文本類型
+              // getAttribute,hasAttribute
+              let reg = /\{\{(.*?)\}\}/g
+              let text = node.textContent
+              node.textContent = text.replace(reg, (match, p1) => {
+                // match: 匹配到的字符串 // {{msg2}}
+                // p1: 第一組捕獲的內容，就是正則裡的第一個括號裡捕獲到的數據 // msg2
+                // console.log(match)
+                // console.log(p1)
+                let vmKey = p1.trim()
+
+                // this.$watchEvent[vmKey] == app.$watchEvent['msg2']
+                // 實例化 new Watch(this, vmKey, node, 'textContent')，app 的數據變動時才會觸發 observe 函數裡的 Watch 物件的 update 函數
+                if (this.hasOwnProperty(vmKey)) {
+                  let watcher = new Watch(this, vmKey, node, 'textContent')
+                  if (this.$watchEvent[vmKey]) {
+                    this.$watchEvent[vmKey].push(watcher)
+                  } else {
+                    this.$watchEvent[vmKey] = []
+                    this.$watchEvent[vmKey].push(watcher)
+                  }
+                }
+
+                return this[vmKey]
+              })
+            }
+          })
+        }
+      }
+
+      class Watch {
+        constructor(vm, key, node, attr, nType) {
+          // vm 即實例化的 app 對象
+          this.vm = vm
+          // key 即綁定的 vm 觸發的屬性
+          this.key = key
+          // node 即是 vm[key] 數據綁定的 HTML 節點
+          this.node = node
+          // attr 即是 vm 數據綁定的 HTML 節點的屬性名稱
+          this.attr = attr
+        }
+        update() {
+
+          // console.log(option) // 如果把 option 設為全域變數才能獲取 option
+
+          // 節點屬性 = this.vm[this.key]
+          // 例如: h1 節點的 innerHTML 屬性 = app.msg2
+          // 藉此更新試圖
+          this.node[this.attr] = this.vm[this.key]
+
+        }
+      }
+
+    </script>
+    <script>
+      // let options = {
+      //   el: '#app',
+      //   data: {
+      //     msg: 'hello vue',
+      //     msg2: 'i am msg2',
+      //   },
+      //   methods: {
+      //     changeEvent() {
+      //       this.msg2 = 'call changeEvent method'
+      //     }
+      //   },
+      //   beforeCreate: function () {
+      //     console.log('---數據創造前---')
+      //   },
+      //   created: function () {
+      //     console.log('---數據創造後---')
+      //   },
+      //   beforeMount: function () {
+      //     console.log('---掛載前---')
+      //   },
+      //   mounted: function () {
+      //     console.log('---掛載後---')
+      //   },
+      //   /* 初始化不會觸發 */
+      //   beforeUpdate: function () {
+      //     console.log('---數據更新前---')
+      //   },
+      //   updated: function () {
+      //     console.log('---數據更新後---')
+      //   }
+      // }
+
+      let app = new Vue({
+
+        el: '#app',
+        data: {
+          msg: 'hello vue',
+          msg2: 'i am msg2',
+        },
+        methods: {
+          changeEvent() {
+            this.msg2 = 'call changeEvent method'
+          }
+        },
+        beforeCreate: function () {
+          console.log('---數據創造前---')
+        },
+        created: function () {
+          console.log('---數據創造後---')
+        },
+        beforeMount: function () {
+          console.log('---掛載前---')
+        },
+        mounted: function () {
+          console.log('---掛載後---')
+        },
+        /* 初始化不會觸發 */
+        beforeUpdate: function () {
+          console.log('---數據更新前---')
+        },
+        updated: function () {
+          console.log('---數據更新後---')
+        }
+
+      })
+      console.log(app)
+    </script>
+  </body>
+
+</html>

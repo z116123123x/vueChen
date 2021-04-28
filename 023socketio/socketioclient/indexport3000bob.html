@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="./js/socketio.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<h1>bob</h1>
+		<script>
+			
+			// console.log(io)
+			let con = io.connect('http://localhost:3000')
+			con.on('connect', function (data) {
+				console.log('連接事件')
+				console.log(data)
+			})
+			// 監聽服務器端有無發送news事件
+			con.on('news', function (data) {
+				console.log(data)
+			})
+
+			// 對伺服器發送'my other event'事件
+			con.emit('my other event', {
+				username: 'bob',
+				chatcontent: 'hi',
+				where: 'form client'
+			})
+
+			// 監聽服務器端有無發送'server study'事件
+			con.on('server study', function (data) {
+				console.log(data)
+			})
+
+			// 監聽服務器端有無發送'addUser'事件
+			// 服務器的'addUser'事件會傳遞自己的id
+			con.on('addUser', function (data) {
+				console.log(data)
+			})
+
+			// 監聽服務器端有無發送'senttoclient'事件
+			con.on('senttoclient', function (data) {
+				console.log(data)
+			})
+
+		</script>
+	</body>
+
+</html>

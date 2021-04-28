@@ -1,0 +1,105 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('expressserver:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+// 引入 socketiofn
+// 調用 socketobj.getsocket(server)
+// 調用後會產生socket實例到 ../socketiofn 裡的 socketobj.io
+// 因為可以看到 ../socketiofn 裡 getsocket 函數 socketobj.io=require('socket.io')(server, {cors: {origin: '*'}})
+// 表示實例化的 socketio 已經在 ../socketiofn 的 socketobj.io
+var socketobj = require('../socketiofn');
+socketobj.getsocket(server)
+
+
+// 在 server 後實例化 socket.io
+// 這裡雖然可以獲取 io ，但是我們的 io 要在 app.js 裡面用
+// 這裡沒辦法導出，這裡只是運行文件
+// /package.json 的 start 指令可以看到運行指令，node ./bin/www
+// var io = require('socket.io')(server, {cors: {origin: '*'}}); // 所以沒辦法直接從這裡獲得 io
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

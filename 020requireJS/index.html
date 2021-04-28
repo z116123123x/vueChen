@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<h2>沒有使用 requireJS 進行模塊化時要分別引入 JS</h2>
+	<!-- <script src="./js/index1.js"></script> -->
+	<!-- <script src="./js/index2.js"></script> -->
+	<h2>使用 requireJS 只需在JS裡面寫要被引入的JS</h2>
+	<h2>requireJS 的原理就是 AJAX</h2>
+	<h2>require 引入的路徑後面不能加副檔名</h2>
+	<script src="./js/require.js"></script>
+	<script>
+		// 對 './js/index1','./js/index2' 進行 AJAX 請求
+		require(['./js/index1','./js/index2'])
+	</script>
+	<h2>使用 requireJS 引入</h2>
+	<script src="./js/require.js"></script>
+	<script>
+		require.config({
+			paths:{
+				// require 引入的路徑後面不能加副檔名，CDN 也不行
+				// jquery-3.5.1 中10833行有定義導出名稱為 jquery，所以 paths 的屬性也要命名為 jquery
+				'jquery':['https://code.jquery.com/jquery-3.5.1']
+			}
+		})
+		// 可以自定義引入模塊的命名，這裡將 jquery 命名為 aa
+		require(['jquery'],function(aa){
+			aa('body').css("background-color","yellow");
+		})
+		require(['jquery'],function($){
+			$('body').css("border","#111 10px solid");
+		})
+	</script>
+</body>
+</html>

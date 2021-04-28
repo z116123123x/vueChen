@@ -1,0 +1,130 @@
+// 變數前面要加 @
+@main-color: #ff6700;
+@small-width: 10px;
+
+.bgColor {
+  background: @main-color;
+}
+.button {
+  background: @main-color;
+}
+.xk {
+  width: 400px;
+  height: 100px;
+  border: solid 1px #ccc;
+}
+.box {
+  .xk;
+  background: @main-color;
+}
+.lcButton(@bgcolor) {
+  .xk;
+  background: @bgcolor;
+}
+.redLcButton {
+  .lcButton(red);
+  text-align: center;
+  line-height: 100px;
+}
+// 預設參數 @bgcolor:#ccc
+.xxButton(@bgcolor:#ccc) {
+  .xk;
+  background: @bgcolor;
+}
+.grayButton {
+  .xxButton();
+}
+.blueButton {
+  .xxButton(skyblue);
+}
+
+// @_ 匹配模式
+// 這裡的 top 是定值，配合 @_ ，調用函數時看 @_ 會匹配到哪個函數
+.triangle(top,@width:5px,@color:#ccc) {
+  border-width: @width;
+  border-color: @color transparent transparent transparent;
+  border-style: solid dashed dashed dashed;
+}
+.triangle(right,@width:5px,@color:#ccc) {
+  border-width: @width;
+  border-color: transparent @color transparent transparent;
+  border-style: dashed solid dashed dashed;
+}
+.triangle(bottom,@width:5px,@color:#ccc) {
+  border-width: @width;
+  border-color: transparent transparent @color transparent;
+  border-style: dashed dashed solid dashed;
+}
+.triangle(left,@width:5px,@color:#ccc) {
+  border-width: @width;
+  border-color: transparent transparent transparent @color;
+  border-style: dashed dashed dashed solid;
+}
+.triangle(@_,@width:5px,@color:#ccc) {
+  // @_ 是固定格式，表示不管你匹配到誰，都會帶上這些內容
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.triangle-top {
+  // 匹配到 top 調用 triangle(top,@width:5px,@color:#ccc) 函數
+  // 加上 .triangle(@_,@width:5px,@color:#ccc) 函數
+  .triangle(top,100px);
+}
+.triangle-test {
+  // 匹配不到 test 就只會有下面內容
+  // width: 0;
+  // height: 0;
+  // overflow: hidden;
+
+  .triangle(test);
+}
+
+// 運算
+.calculation {
+  width: @small-width * 2;
+}
+
+// 嵌套規則
+.todo {
+  width: 100px;
+  height: 100px;
+  h1 {
+    width: 100px;
+    height: 100px;
+  }
+  .item {
+    line-height: 100px;
+    height: 100px;
+    img {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+// @arguments 變量
+// @arguments 變量就是所有的參數
+// 也可以在調用的時候傳入自己設訂的實參
+.borderStyle(@width:10px,@style:solid,@color:#ccc) {
+  border: @arguments;
+}
+.sm-box {
+  .borderStyle();
+  width: 50px;
+  height: 50px;
+}
+.lg-box {
+  .borderStyle(15px,dashed);
+  width: 100px;
+  height: 100px;
+}
+
+// 避免編譯符號 ~
+// 在字串前面加 ~ 後面的字串就不會被編譯
+.xl-box {
+  .borderStyle(15px,dashed);
+  width: 150px;
+  height: 150px;
+  content: ~"@main-color";
+}

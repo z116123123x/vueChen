@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>{{msg}}</h1>
+      <h1>{{num}}</h1>
+      <child-component></child-component>
+    </div>
+    <script type="text/javascript">
+      // 子組件的混入 
+      // 先定義好子組件再實例化 vue
+      let childOptions = {
+        data() {
+          return {
+            msg: 'child-options 的 msg'
+          }
+        },
+        created() {
+          console.log('vue 生命週期 created')
+        },
+        beforeMount() {
+          console.log('vue 生命週期 beforeMount')
+        },
+        mounted() {
+          console.log('vue 生命週期 mounted')
+        },
+      }
+
+      Vue.component('child-component', {
+        template: '<div>{{msg}}</div>',
+        mixins: [childOptions]
+      })
+
+      // 混入(mixin) options 到 vue 實例
+      let options = {
+        data: {
+          num: 100
+        },
+        created() {
+          console.log('vue 生命週期 created')
+        },
+        beforeMount() {
+          console.log('vue 生命週期 beforeMount')
+        },
+        mounted() {
+          console.log('vue 生命週期 mounted')
+        },
+      }
+
+      let app = new Vue({
+        el: '#app',
+        data: {
+          msg: 'i am msg'
+        },
+        // 混入(mixin) 提供了一種非常靈活的方式，來分發Vue 組件中的可複用功能。
+        // 一個混入對象可以包含任意組件選項。當組件使用混入對象時，所有混入對象的選項將被“混合”進入該組件本身的選項。
+        mixins: [options]
+      })
+
+
+    </script>
+  </body>
+
+</html>

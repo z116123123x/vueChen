@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="./js/socketio.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<h1>denny qunliao</h1>
+		<button id="sendbtn">發送消息</button>
+		<script>
+			
+			// console.log(io)
+			let con = io.connect('http://localhost:3000/')
+			con.on('connect', function (data) {
+				con.emit('addroom', {room:'qunliao'})
+				// 服務器端監聽到'addroom'事件後執行 socket.join(data.room) 加入房間
+			})
+
+			document.querySelector('#sendbtn').addEventListener('click',function(){
+				// 發送群聊事件
+				con.emit('sendmsgtoroom', {
+					room:'qunliao',
+					content:'這是發送給群聊房間的內容'
+				})
+			})
+
+			// 監聽'qunliao'群聊事件
+			con.on('qunliao', function (data) {
+				console.log(data)
+			})
+
+		</script>
+	</body>
+
+</html>
